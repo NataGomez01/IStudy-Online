@@ -17,6 +17,19 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
     var socket = io();
+    //FIND
+    // socket.emit('find_room', {flash_id: 3, name: 'Natã', foto: 'https://conteudo.imguol.com.br'}).on('resFindRoom', (msg) => console.log(msg))
+    //CREATE
+    // socket.emit('create_room', {flash_id: 3, name: 'Natã', foto: 'https://conteudo.imguol.com.br'}).on('resCreateRoom', (msg) => console.log(msg))
+    // socket.on('resJoinRoom', (msg) => console.log(msg))
+    //JOIN
+    // socket.emit('join_room', {room_id: 6931, name: 'Natã', foto: 'https://conteudo.imguol.com.br'}).on('resJoinRoom', (msg) => console.log(msg))
+    //ANSWERED QUESTION
+    // socket.emit('answer_game', {room_id: 6931})
+    // socket.on('resAnswer', (msg) => console.log(msg))
+    //FINISH GAME
+    // socket.emit('finish_game', {room_id: 6931, results: {name: 'Datã', correct: 2, wrong: 10}})
+    // socket.on('resEnd', (msg) => console.log(msg)).on('disconnect')
     </script>
 </body>
 </html>

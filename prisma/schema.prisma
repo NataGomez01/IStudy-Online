@@ -1,100 +1,22 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
+  provider = "mysql"
+  url = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
-model Answers {
-  id       Int    @id @default(autoincrement())
+model rooms {
+  id       Int    @id 
   id_Card  Int
-  question String @db.VarChar(255)
-  answer   String
-}
-
-model Cards {
-  id           Int      @id @default(autoincrement())
-  image_url    String   @db.VarChar(1000)
-  title        String   @db.VarChar(255)
-  played_times Int
-  createdAt    DateTime @default(now())
-}
-
-model Categorys {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-}
-
-model Medals {
-  id         Int    @id @default(autoincrement())
-  image_icon String @db.VarChar(1000)
-  title      String @db.VarChar(255)
-  desc       String @db.VarChar(1000)
-}
-
-model Questions {
-  id             Int    @id @default(autoincrement())
-  id_Card        Int
-  text           String @db.VarChar(255)
-  letter_a       String @db.VarChar(255)
-  letter_b       String @db.VarChar(255)
-  letter_c       String @db.VarChar(255)
-  letter_d       String @db.VarChar(255)
-  correct_letter String @db.VarChar(1)
-}
-
-model Statiscs {
-  id      Int @id @default(autoincrement())
-  id_User Int
-  wins    Int
-  loses   Int
-  playeds Int
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  image_url String   @db.VarChar(1000)
-  name      String   @db.VarChar(255)
-  email     String   @db.VarChar(255)
-  senha     String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-}
-
-model User_Cards {
-  id        Int      @id @default(autoincrement())
-  id_User   Int
-  image_url String   @db.VarChar(1000)
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-}
-
-model CardsToCategorys {
-  A Int
-  B Int
-
-  @@unique([A, B], map: "_CardsToCategorys_AB_unique")
-  @@index([B], map: "_CardsToCategorys_B_index")
-  @@map("_CardsToCategorys")
-}
-
-model CategorysToUser_Cards {
-  A Int
-  B Int
-
-  @@unique([A, B], map: "_CategorysToUser_Cards_AB_unique")
-  @@index([B], map: "_CategorysToUser_Cards_B_index")
-  @@map("_CategorysToUser_Cards")
-}
-
-model MedalsToStatiscs {
-  A Int
-  B Int
-
-  @@unique([A, B], map: "_MedalsToStatiscs_AB_unique")
-  @@index([B], map: "_MedalsToStatiscs_B_index")
-  @@map("_MedalsToStatiscs")
+  private   Boolean
+  onlines   Int
+  name_player1    String
+  name_player2    String
+  avatar_player1    String
+  avatar_player2    String
+  answered   Int 
 }
