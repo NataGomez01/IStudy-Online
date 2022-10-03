@@ -13,10 +13,17 @@ class room {
                     where: {
                         id_Card: flash_data.flash_id,
                         private: false,
-                        onlines: 1
+                        onlines: 1 
                     }
                 })
-                if(findPublicRoom[0]) {
+
+                const findSameUser = await prisma.rooms.findMany({
+                    where: {
+                        name_player1: flash_data.name
+                    }
+                })
+
+                if(findPublicRoom[0] && !findSameUser[0]) {
                     await prisma.rooms.update({
                         where: {
                             id: findPublicRoom[0].id
@@ -86,11 +93,12 @@ class room {
                         }
                     })
                     socket.join(findRoom[0].id)
-                    this.io.to(findRoom[0].id).emit('resJoinRoom', {ready: true, message: 'One player joined in the room', room: findRoom[0].id})
+                    this.io.to(findRoom[0].id).emit('resJoinRoom', {ready: true, message: 'One player joined in the room', room: findRoom[0].id, flashId: findRoom[0].id_Card})
                 } else {
-                    socket.emit('resJoinRoom', 'ID de sala inválida ou sala lotada')
+                    socket.emit('resJoinRoom', {error: 'ID de sala inválida ou sala lotada'})
                 }
             })
+            // INSIDE GAME
             socket.on('answer_game', async (game_data) => {
                 const findGame = await prisma.rooms.findUnique({
                     where: {
@@ -108,7 +116,7 @@ class room {
                         }
                     })
                     socket.join(game_data.room_id)
-                    this.io.to(game_data.room_id).emit('resAnswer', {ready: true})
+                    this.io.to(game_data.room_id).emit('resAnswer', {ready: true, roomAfk: game_data.roomAfk})
                 } else if(findGame.answered == 0) {
                     await prisma.rooms.update({
                         where: {
@@ -124,7 +132,9 @@ class room {
             })
             socket.on('finish_game', async (end_data) => {
                 socket.join(end_data.room_id)
-                this.io.to(end_data.room_id).emit('resEnd', end_data.results)
+                if(end_data.results) {
+                    this.io.to(end_data.room_id).emit('resEnd', end_data.results)
+                }
 
                 const res = await prisma.rooms.findUnique({
                     where: {
@@ -139,6 +149,15 @@ class room {
                         }
                     })
                 }
+            })
+            socket.on('left_game', async (end_data) => {
+                socket.join(end_data.room_id)
+                if(end_data.afk) {
+                    this.io.to(end_data.room_id).emit('resAfk', {afk: true})
+                } else {
+                    this.io.to(end_data.room_id).emit('resAfk', {afk: false})
+                }
+                
             })
         })
     }
